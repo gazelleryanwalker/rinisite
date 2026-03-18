@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || request.auth.token.email == "rdub@fullstackwoo.day");
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if request.auth != null && (resource.data.uid == request.auth.uid || request.auth.token.email == "rdub@fullstackwoo.day");
+      allow create: if true;
+      allow update: if request.auth != null && (resource.data.uid == request.auth.uid || request.auth.token.email == "rdub@fullstackwoo.day");
+      allow delete: if request.auth != null && request.auth.token.email == "rdub@fullstackwoo.day";
+    }
+  }
+}
